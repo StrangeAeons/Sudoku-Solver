@@ -1,20 +1,49 @@
 class Grid {
     private static int totalSolutions;
     private Cell[] cells = new Cell[81];
+    //private int[] possibles = new int[81];
     
     Grid() {
-	for( int i = 0; i < cells.length; i++)
-	    cells[i] = new Cell();	
+	for( int i = 0; i < cells.length; i++) {
+	    cells[i] = new Cell();
+	    //possibles[i] = cells[i].numberOfPossibles();
+	}
     }
 
-
-
+    Cell getCell( int index) {
+	return cells[index];
+    }
 
     Cell[] getCells() {
 	return cells;
     }
 
-    Cell searchRegionforSingle( int searchNumber, int regionID) {
+}
+
+
+
+
+
+
+
+/*************************************************************************************    
+   
+    void decrementPossibles( int index) {
+	possibles[index]--;
+    }
+    
+    int[] getPossibles() {
+	return possibles;
+    }
+
+    void initPossibles( int index) {
+	possibles[index] = 0;
+    }
+
+
+
+
+ Cell searchRegionforSingle( int searchNumber, int regionID) {
 	// returns cell containing a specific possible solutions from a specific region
 	for( int i = 0; i < cells.length; i++)
 	    if( cells[i].regionID() == regionID)
@@ -83,30 +112,6 @@ class Grid {
 	return new Cell();
     }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    Cell getCell( int index) {
-	return cells[index];
-    }
-
     boolean columnContains( int searchNumber, int columnID) {
 	for( int i = columnID; i < columnID + 73; i += 9) {
 	    if( cells[i].getSolution() == searchNumber)
@@ -125,52 +130,5 @@ class Grid {
 	return false;
     }
 
-    boolean rowContains( int searchNumber, int rowID) {
-	int rowStart = rowID*9;
-	for( int i = rowStart; i < rowStart + 9; i++) {
-	    if( cells[i].getSolution() == searchNumber)
-		return true;
-	}
-	return false;
-    }
-
-    void deleteFromColumn( int num, int columnID) {
-	for( int i = columnID; i < columnID + 73; i += 9) {
-	    if( cells[i].contains( num)){
-		cells[i].eliminatePotentialSolution( num);
-		Cell.incrementEventCount();		    		
-	    }
-	}  
-    }    
-
-    void deleteFromColumn( int num, Cell cell) {
-	int columnID = cell.getCellNumber() % 9;
-	for( int i = columnID; i < columnID + 73; i += 9) {
-	    if( cells[i].contains( num)){
-		cells[i].eliminatePotentialSolution( num);
-		Cell.incrementEventCount();		    		
-	    }
-	}  
-    }  
-    
-    void deleteFromRegion( int num, int regionID) {
-	for( int i = 0; i < cells.length; i++) {
-	    if( cells[i].regionID() == regionID)
-		if( cells[i].contains( num)){
-		    cells[i].eliminatePotentialSolution( num);
-		    Cell.incrementEventCount();		    		    
-		}
-	}
-    }
-
-    void deleteFromRow( int num, int rowID) {
-	int rowStart = rowID*9;
-	for( int i = rowStart; i < rowStart + 9; i++) {
-	    if( cells[i].contains( num)){
-		cells[i].eliminatePotentialSolution( num);
-		Cell.incrementEventCount();		    		
-	    }
-	}    
-    }
-
 }
+*************************************************************************************/

@@ -4,7 +4,7 @@ class Cell {
 
     // numberSolved is used to determine if any changes took place in
     // the most recent iteration of the solve algorithms.
-    private static int eventCount;
+    private static int numberSolved;
 
     private static int numberOfCells;
     private int solution;
@@ -24,9 +24,11 @@ class Cell {
 	return false;
     }
 
-    void eliminatePotentialSolution( int i) {
+    void eliminatePotentialSolution( int i, Grid grid) {
 	arr[i - 1] = 0;
-	eventCount++;
+	if( this.numberOfPossibles() == 1)
+	    this.setSolution( this.checkSolved(), grid);
+	//grid.decrementPossibles( cellNumber);
     }
 
     int getCellNumber() {
@@ -35,10 +37,6 @@ class Cell {
 
     int columnID() {
 	return cellNumber % 9;
-    }
-
-    static int getEventCount() {
-	return eventCount;
     }
 
     int numberOfPossibles() {
@@ -62,16 +60,16 @@ class Cell {
 	return solution;
     }
 
-    static void incrementEventCount(){
-	eventCount++;
-    }    
-    
-    boolean isSolved() {
+    static int getNumberSolved() {
+	return numberSolved;
+    }
+
+    int checkSolved() {
 	int count = 0,
 	    tempSolution = 0;
 
 	if( solution > 0)
-	    return true;
+	    return 0;
 	
 	for( int i : arr) {
 	    if( i > 0) {
@@ -79,57 +77,48 @@ class Cell {
 		count++;
 	    }
 	}
-	if( count > 1)
-	    return false;
-	
-	setSolution( tempSolution);
-	return true;	
+	if( count == 1)
+	    return tempSolution;
+	return 0;
     }
 
     int[] getPossibles() {
 	return arr;
     }
 
-    void setSolution( int solution) {
-	this.solution = solution;
-	for( int i = 0; i < 9; i++) {
-	    arr[i] = 0;
-	}
-    }
-    
     void setSolution( int solution, Grid grid) {
+	if( solution == 0)
+	    return;
+
 	this.solution = solution;
 	for( int i = 0; i < 9; i++) {
 	    arr[i] = 0;
 	}
 
-	Cell[] cells = grid.getCells();
-	
 	int regionID = this.regionID(),
 	    rowID    = this.rowID(),
 	    colID    = this.columnID();
 
 	for( int i = 0; i < 81; i++) {
 	    for( int j = 1; j < 10; j++) {
-		if( cells[i].regionID() == regionID) {
-		    if( cells[i].contains( solution) ) {
-			cells[i].eliminatePotentialSolution( solution);
-			eventCount++;			
+		if( grid.getCells()[i].regionID() == regionID) {
+		    if( grid.getCells()[i].contains( solution) ) {
+			grid.getCells()[i].eliminatePotentialSolution( solution, grid);
 		    }
 		}
-		if( cells[i].rowID() == rowID) {
-		    if( cells[i].contains( solution) ) {
-			cells[i].eliminatePotentialSolution( solution);
-			eventCount++;			
+		if( grid.getCells()[i].rowID() == rowID) {
+		    if( grid.getCells()[i].contains( solution) ) {
+			grid.getCells()[i].eliminatePotentialSolution( solution, grid);
 		    }		
-		}
-		if( cells[i].columnID() == colID) {
-		    if( cells[i].contains( solution) ) {
-			cells[i].eliminatePotentialSolution( solution);
-			eventCount++;			
-		    }
+		}		
+		
+		if( grid.getCells()[i].columnID() == colID) {
+		    if( grid.getCells()[i].contains( solution) ) {
+			grid.getCells()[i].eliminatePotentialSolution( solution, grid);
+		    }			
 		}
 	    }
 	}
+	numberSolved++;
     }
 }

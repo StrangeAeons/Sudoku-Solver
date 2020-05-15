@@ -7,7 +7,6 @@ public class Main {
 
 	System.out.println("Enter the sudoku play grid row by row : ");
 	System.out.println("(Enter 0 for empty cell)");
-	//System.out.println("Spaces are allowed but not necessary");
 
 	int[] arr = new int[81];
 	for( int i = 0; i < arr.length; i++) {
@@ -22,93 +21,18 @@ public class Main {
 		playGrid.getCell(i).setSolution( solution, playGrid);
 	    }
 	}
-	/*	int changes = 0;
-	do{
-	    changes = Cell.getEventCount();
 
-	    Algorithms.preliminaryStep( playGrid);
-	    Algorithms.hiddenSingles( playGrid);
-	    Printer.printGrid( playGrid);	    
-	    } while( changes != Cell.getEventCount() );*/
+	Printer.printPossibles( playGrid);
+	Printer.printGrid( playGrid);	
 
-	int count = 0;
-	while( count < 6) {
-	    Algorithms.preliminaryStep( playGrid);
-
-	    Printer.printPossibles( playGrid);		
-	    Printer.printGrid( playGrid);
-
-	    Algorithms.hiddenSingles( playGrid);
+	int changes = 0;
+	do {
 	    
-	    Printer.printPossibles( playGrid);		
-	    Printer.printGrid( playGrid);
-	    count++;
-	}
+
+	} while( changes != Cell.getNumberSolved() ); 
     }
 }
 
-class Algorithms {
-
-    private Algorithms() {
-    }
-    
-    static void preliminaryStep( Grid grid) {
-	for( int i = 0; i < 9; i++) 
-	    for( int j = 1; j < 10; j++) {
-		if( grid.regionContains( j, i) ) {
-		    grid.deleteFromRegion( j, i);
-		}
-		if( grid.rowContains( j, i) ) {
-		    grid.deleteFromRow( j, i);
-		}
-		if( grid.columnContains( j, i) ) {
-		    grid.deleteFromColumn( j, i);
-		}
-	    }
-	
-	for( int i = 0; i < 81; i++)
-	    grid.getCell(i).isSolved();
-    }
-
-    static void hiddenSingles( Grid grid) {
-	
-	int[][] regions = grid.getRegionsArray(),
-	        rows    = grid.getRowsArray(),
-	        cols    = grid.getColsArray();
-
-	for( int i = 0; i < 9; i++) {
-	    for(int j = 1; j < 10; j++) {
-		if( regions[i][j] == 1) {
-		    Cell cell = grid.searchRegionforSingle( j, i);
-		    cell.setSolution( j, grid);
-		}
-	    }
-	}
-	
-	for( int i = 0; i < 9; i++) {
-	    for( int j = 0; j < 10; j++) {
-		if( rows[i][j] == 1) {
-		    Cell cell = grid.searchRow( j, i);
-		    cell.setSolution( j, grid);
-		}
-	    }
-	}
-
-
-	for( int i = 0; i < 9; i++) {
-	    for( int j = 0; j < 10; j++) {
-		if( cols[i][j] == 1) {
-		    Cell cell = grid.searchCol( j, i);
-		    cell.setSolution( j, grid);
-		}
-	    }
-	}
-
-	for( int i = 0; i < 81; i++)
-	    grid.getCell(i).isSolved();	
-    }
-}
-	    
 class Printer {
 
     private Printer() {
@@ -159,9 +83,10 @@ class Printer {
 		count++;
 	    }
 	}
+	System.out.println();
     }
 
-    static int getMaxWidth( Grid grid) {
+    private static int getMaxWidth( Grid grid) {
 	int max = 0,
 	    check = 0;
 	for( int i = 0; i < 81; i++) {
@@ -172,15 +97,3 @@ class Printer {
 	return max*2 + 2;
     }
 }
-
-
-
-/********************************************************
-	for( int i = 0; i < 9; i++) {
-	    for( int j = 0; j < 10; j++)
-		System.out.print( regions[i][j]);
-	    System.out.println();
-	}
-	System.out.println("\n");
-       
-********************************************************/
