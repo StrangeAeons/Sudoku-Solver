@@ -28,7 +28,6 @@ class Cell {
 	arr[i - 1] = 0;
 	if( this.numberOfPossibles() == 1)
 	    this.setSolution( this.checkSolved(), grid);
-	//grid.decrementPossibles( cellNumber);
     }
 
     int getCellNumber() {
@@ -87,35 +86,30 @@ class Cell {
     }
 
     void setSolution( int solution, Grid grid) {
-	if( solution == 0)
+	if( solution == 0 || this.solution != 0)
 	    return;
 
 	this.solution = solution;
+	
 	for( int i = 0; i < 9; i++) {
 	    arr[i] = 0;
 	}
-
+	
 	int regionID = this.regionID(),
 	    rowID    = this.rowID(),
 	    colID    = this.columnID();
 
 	for( int i = 0; i < 81; i++) {
+	    Cell cell = grid.getCell(i);
+	    int region = cell.regionID(),
+		col    = cell.columnID(),
+		row    = cell.rowID();   
+
 	    for( int j = 1; j < 10; j++) {
-		if( grid.getCells()[i].regionID() == regionID) {
-		    if( grid.getCells()[i].contains( solution) ) {
-			grid.getCells()[i].eliminatePotentialSolution( solution, grid);
+		if( region == regionID || row == rowID || col == colID) {
+		    if( cell.contains( solution) ) {
+			cell.eliminatePotentialSolution( solution, grid);
 		    }
-		}
-		if( grid.getCells()[i].rowID() == rowID) {
-		    if( grid.getCells()[i].contains( solution) ) {
-			grid.getCells()[i].eliminatePotentialSolution( solution, grid);
-		    }		
-		}		
-		
-		if( grid.getCells()[i].columnID() == colID) {
-		    if( grid.getCells()[i].contains( solution) ) {
-			grid.getCells()[i].eliminatePotentialSolution( solution, grid);
-		    }			
 		}
 	    }
 	}

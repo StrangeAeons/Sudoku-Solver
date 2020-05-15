@@ -1,12 +1,13 @@
 class Grid {
-    private static int totalSolutions;
+
     private Cell[] cells = new Cell[81];
-    //private int[] possibles = new int[81];
-    
+
+    // CHANGE BACK TO PRIVATE!!!!!!!
+    public int[][][] regionsRowsColumns = new int[3][][];
+
     Grid() {
 	for( int i = 0; i < cells.length; i++) {
 	    cells[i] = new Cell();
-	    //possibles[i] = cells[i].numberOfPossibles();
 	}
     }
 
@@ -17,10 +18,77 @@ class Grid {
     Cell[] getCells() {
 	return cells;
     }
+    
+    void checkRegionsRowsColumns() {
+	for( int i = 0; i < 3; i++) {
+	    for( int j = 0; j < 9; j++) {
+		for( int k = 0; k < 10; k++) {
+		    ;
+		}
+	    }
+	}
+    }
+
+    void fillRegionsRowsColumns() {
+	Caller[] call = {new GetRegions(), new GetRows(), new GetColumns() };
+	for( int i = 0; i < 3; i++) {
+	    regionsRowsColumns[i] = call[i].getArray( cells);
+	}
+    }
 
 }
 
+interface Caller {
 
+    int[][] getArray( Cell[] cells);
+}
+
+class GetRegions implements Caller {
+
+
+    public int[][] getArray( Cell[] cells) {
+	int[][] arr = new int[9][10];
+	for( int i = 0; i < 81; i++) {
+	    int regionID = cells[i].regionID();
+	    for(int j = 1; j < 10; j++) {
+		if(cells[i].contains( j) ) {
+		    arr[regionID][j]++;
+		}
+	    }
+	}
+	return arr;	
+    }
+}
+
+class GetRows implements Caller {
+
+    
+    public int[][] getArray( Cell[] cells) {
+	int[][] arr = new int[9][10];
+	for( int i = 0; i < 81; i++) {
+	    for( int j = 1; j < 10; j++) {
+		if( cells[i].contains( j) )
+		    arr[i / 9][j]++;
+	    }
+	}
+	return arr;	
+    }
+}
+
+class GetColumns implements Caller {
+
+    
+    public int[][] getArray( Cell[] cells) {
+	int[][] arr = new int[9][10];
+	for( int i = 0; i < 81; i++) {
+	    for( int j = 1; j < 10; j++) {
+		if( cells[i].contains( j) )
+		    arr[i % 9][j]++;
+	    }
+	}
+	return arr;	
+    }
+}
 
 
 
@@ -28,19 +96,6 @@ class Grid {
 
 /*************************************************************************************    
    
-    void decrementPossibles( int index) {
-	possibles[index]--;
-    }
-    
-    int[] getPossibles() {
-	return possibles;
-    }
-
-    void initPossibles( int index) {
-	possibles[index] = 0;
-    }
-
-
 
 
  Cell searchRegionforSingle( int searchNumber, int regionID) {
@@ -53,42 +108,9 @@ class Grid {
 	return new Cell();
     }
 
-    int[][] getRegionsArray() {
-	int[][] arr = new int[9][10];
 
-	for( int i = 0; i < 81; i++) {
-	    int regionID = cells[i].regionID();
-	    
-	    for(int j = 1; j < 10; j++) {
-		if(cells[i].contains( j) ) {
-		    arr[regionID][j]++;
-		}
-	    }
-	}
-	return arr;
-    }
 
-    int[][] getRowsArray() {
-	int[][] arr = new int[9][10];
-	for( int i = 0; i < 81; i++) {
-	    for( int j = 1; j < 10; j++) {
-		if( cells[i].contains( j) )
-		    arr[i / 9][j]++;
-	    }
-	}
-	return arr;
-    }
-    
-    int[][] getColsArray() {
-	int[][] arr = new int[9][10];
-	for( int i = 0; i < 81; i++) {
-	    for( int j = 1; j < 10; j++) {
-		if( cells[i].contains( j) )
-		    arr[i % 9][j]++;
-	    }
-	}
-	return arr;
-    }
+
 
     Cell searchRow( int searchNumber, int rowID) {
 	int rowStart = rowID*9;

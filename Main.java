@@ -23,13 +23,14 @@ public class Main {
 	}
 
 	Printer.printPossibles( playGrid);
-	Printer.printGrid( playGrid);	
-
+	
+	//Printer.printGrid( playGrid);	
+	/*
 	int changes = 0;
 	do {
 	    
 
-	} while( changes != Cell.getNumberSolved() ); 
+	} while( changes != Cell.getNumberSolved() ); */
     }
 }
 
@@ -97,3 +98,18 @@ class Printer {
 	return max*2 + 2;
     }
 }
+
+
+
+/**********************************************************************************************
+
+	playGrid.fillRegionsRowsColumns();
+	for( int i = 0; i < 3; i++) {
+	    for( int j = 0; j < 9; j++) {
+		for( int k = 0; k < 10; k++) {
+		    System.out.print( playGrid.regionsRowsColumns[i][j][k] + " ");
+		}
+		System.out.println();
+	    }
+	    System.out.println();
+	}
