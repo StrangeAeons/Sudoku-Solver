@@ -13,7 +13,7 @@ class Cell {
     //  The ints in this array represent potential solutions for the cell.
     //  Once we have narrowed the potential solutions down to one, the cell is solved.
     private int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-
+    
     Cell(){
 	cellNumber = numberOfCells++;
     }
@@ -23,17 +23,15 @@ class Cell {
 	    return true;
 	return false;
     }
-    void eliminatePotentialSolution( int i) {
-	arr[i - 1] = 0;
-    }
     
-    void eliminatePotentialSolution( int i, Grid grid) {
+    void eliminateCandidate( int i) {
 	arr[i - 1] = 0;
-	grid.fillRegionsRowsColumns();
-	if( this.numberOfPossibles() == 1)
-	    this.setSolution( this.checkSolved(), grid);
+	if( this.numberOfCandidates() == 1) {
+	    System.out.println("'" + this.checkSolved() + "'" + " in cell "  // FOR DEBUGGING
+			       + this.cellNumber + " is a naked single.");	
+	}
     }
-
+	
     int getCellNumber() {
 	return cellNumber;
     }
@@ -42,7 +40,7 @@ class Cell {
 	return cellNumber % 9;
     }
 
-    int numberOfPossibles() {
+    int numberOfCandidates() {
 	int count = 0;
 	for( int i = 0; i < 9; i++) {
 	    if( arr[i] > 0)
@@ -85,42 +83,9 @@ class Cell {
 	return 0;
     }
 
-    int[] getPossibles() {
+    int[] getCandidates() {
 	return arr;
     }
-
-    void setSolution( int solution, Grid grid, boolean bool) {
-	if( solution == 0 || this.solution != 0)
-	    return;
-	
-	this.solution = solution;
-	
-	for( int i = 0; i < 9; i++) {
-	    arr[i] = 0;
-	}
-	
-	int regionID = this.regionID(),
-	    rowID    = this.rowID(),
-	    colID    = this.columnID();
-	
-	for( int i = 0; i < 81; i++) {
-	    Cell cell = grid.getCell(i);
-	    int region = cell.regionID(),
-		col    = cell.columnID(),
-		row    = cell.rowID();   
-	    
-	    for( int j = 1; j < 10; j++) {
-		if( region == regionID || row == rowID || col == colID) {
-		    if( cell.contains( solution) ) {
-			cell.eliminatePotentialSolution( solution);
-		    }
-		}
-	    }
-	}
-	grid.fillRegionsRowsColumns();
-	numberSolved++;
-    }
-
 
     void setSolution( int solution, Grid grid) {
 	if( solution == 0 || this.solution != 0)
@@ -147,7 +112,8 @@ class Cell {
 	    for( int j = 1; j < 10; j++) {
 		if( region == regionID || row == rowID || col == colID) {
 		    if( cell.contains( solution) ) {
-			cell.eliminatePotentialSolution( solution, grid);
+			cell.eliminateCandidate( solution);
+			grid.fillRegionsRowsColumns();			
 		    }
 		}
 	    }

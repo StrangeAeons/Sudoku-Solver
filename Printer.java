@@ -21,7 +21,7 @@ class Printer {
 	System.out.println();
     }
 
-    static void printPossibles( Grid grid) {
+    static void printCandidates( Grid grid) {
 	int maxWidth = getMaxWidth( grid);
 
 	for( int i = 0; i < 81; i++) {
@@ -40,7 +40,7 @@ class Printer {
 	    else
 		count += 4;
 	    Cell cell = grid.getCell(i);
-	    int[] arr = cell.getPossibles();
+	    int[] arr = cell.getCandidates();
 
 	    for( int a = 0; a < 9; a++) {
 		if( arr[a] != 0) {
@@ -61,7 +61,7 @@ class Printer {
 	    check = 0;
 	for( int i = 0; i < 81; i++) {
 	    Cell cell = grid.getCell( i);
-	    if( (check = cell.numberOfPossibles() ) > max)
+	    if( (check = cell.numberOfCandidates() ) > max)
 		max = check;
 	}
 	return max*2 + 4;

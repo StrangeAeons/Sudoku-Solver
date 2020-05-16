@@ -25,7 +25,8 @@ class Grid {
 	    for( int j = 0; j < 9; j++) {
 		for( int k = 0; k < 10; k++) {
 		    if( regionsRowsColumns[i][j][k] == 1) {
-			Printer.printPossibles( this);     // FOR DEBUGGING
+			Printer.printCandidates( this);     // FOR DEBUGGING
+			Printer.printGrid( this);          // FOR DEBUGGING
 			Cell cell = search[i].searchSingles( j, k, cells);
 			cell.setSolution( k, this);
 		    }
