@@ -21,25 +21,14 @@ public class Main {
 		playGrid.getCell(i).setSolution( solution, playGrid);
 	    }
 	}
-
-	playGrid.checkRegionsRowsColumns();
-	
-	//Printer.printPossibles( playGrid);
+	playGrid.checkRegionsRowsColumns();	
 	Printer.printGrid( playGrid);
-
-	/*
-	int changes = 0;
-	do {
-	    
-
-	} while( changes != Cell.getNumberSolved() ); */
     }
 }
 
 
 
 /**********************************************************************************************
-
 	playGrid.fillRegionsRowsColumns();
 	for( int i = 0; i < 3; i++) {
 	    for( int j = 0; j < 9; j++) {
