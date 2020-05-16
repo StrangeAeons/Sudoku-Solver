@@ -23,9 +23,13 @@ class Cell {
 	    return true;
 	return false;
     }
-
+    void eliminatePotentialSolution( int i) {
+	arr[i - 1] = 0;
+    }
+    
     void eliminatePotentialSolution( int i, Grid grid) {
 	arr[i - 1] = 0;
+	grid.fillRegionsRowsColumns();
 	if( this.numberOfPossibles() == 1)
 	    this.setSolution( this.checkSolved(), grid);
     }
@@ -85,6 +89,39 @@ class Cell {
 	return arr;
     }
 
+    void setSolution( int solution, Grid grid, boolean bool) {
+	if( solution == 0 || this.solution != 0)
+	    return;
+	
+	this.solution = solution;
+	
+	for( int i = 0; i < 9; i++) {
+	    arr[i] = 0;
+	}
+	
+	int regionID = this.regionID(),
+	    rowID    = this.rowID(),
+	    colID    = this.columnID();
+	
+	for( int i = 0; i < 81; i++) {
+	    Cell cell = grid.getCell(i);
+	    int region = cell.regionID(),
+		col    = cell.columnID(),
+		row    = cell.rowID();   
+	    
+	    for( int j = 1; j < 10; j++) {
+		if( region == regionID || row == rowID || col == colID) {
+		    if( cell.contains( solution) ) {
+			cell.eliminatePotentialSolution( solution);
+		    }
+		}
+	    }
+	}
+	grid.fillRegionsRowsColumns();
+	numberSolved++;
+    }
+
+
     void setSolution( int solution, Grid grid) {
 	if( solution == 0 || this.solution != 0)
 	    return;
@@ -94,6 +131,8 @@ class Cell {
 	for( int i = 0; i < 9; i++) {
 	    arr[i] = 0;
 	}
+	grid.fillRegionsRowsColumns();
+
 	
 	int regionID = this.regionID(),
 	    rowID    = this.rowID(),
@@ -113,6 +152,7 @@ class Cell {
 		}
 	    }
 	}
+	grid.checkRegionsRowsColumns();
 	numberSolved++;
     }
 }
