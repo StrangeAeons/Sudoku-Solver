@@ -22,7 +22,14 @@ public class Main {
 	    }
 	}
 	playGrid.checkRegionsRowsColumns();	
+
+	Grid.BinaryCandidates BC = playGrid.new BinaryCandidates();
+	BC.printBinRegRows();
+	//BC.printRegionRows();
+	
+	Printer.printCandidates( playGrid);
 	Printer.printGrid( playGrid);
+	PauseTest.main( new String[0]);
     }
 }
 
