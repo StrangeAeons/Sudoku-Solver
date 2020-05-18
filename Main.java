@@ -21,14 +21,19 @@ public class Main {
 		playGrid.getCell(i).setSolution( solution, playGrid);
 	    }
 	}
-	playGrid.checkRegionsRowsColumns();	
-
-	Grid.BinaryCandidates BC = playGrid.new BinaryCandidates();
-	BC.printBinRegRows();
-	//BC.printRegionRows();
-	
-	Printer.printCandidates( playGrid);
-	Printer.printGrid( playGrid);
+	int changes = 0;
+	do {
+	    changes = Cell.getNumberSolved();
+	    playGrid.checkRegionsRowsColumns();	
+	    System.out.println("BC CALLED");
+	    Grid.BinaryCandidates BC = playGrid.new BinaryCandidates();
+	    PointingNumbers[] P = {BC.new PointingRows(), BC.new PointingColumns()};
+	    BC.printRegions();
+	    Printer.printCandidates( playGrid);
+	    Printer.printGrid( playGrid);
+	}
+	while( changes != Cell.getNumberSolved());
+	System.out.println("NUMBER SOLVED : " + Cell.getNumberSolved() );
 	PauseTest.main( new String[0]);
     }
 }

@@ -27,8 +27,8 @@ class Cell {
     void eliminateCandidate( int i) {
 	arr[i - 1] = 0;
 	if( this.numberOfCandidates() == 1) {
-	    System.out.println("'" + this.checkSolved() + "'" + " in cell "  // FOR DEBUGGING
-			       + this.cellNumber + " is a naked single.");	
+	    /* System.out.println("'" + this.checkSolved() + "'" + " in cell "  // FOR DEBUGGING
+	       + this.cellNumber + " is a naked single.");*/	
 	}
     }
 	
