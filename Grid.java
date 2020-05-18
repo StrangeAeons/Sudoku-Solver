@@ -1,9 +1,7 @@
 class Grid {
 
     private Cell[] cells = new Cell[81];
-
-    // CHANGE BACK TO PRIVATE!!!!!!!
-    public int[][][] regionsRowsColumns = new int[3][][];
+    private int[][][] regionsRowsColumns = new int[3][][];
 
     Grid() {
 	for( int i = 0; i < cells.length; i++) {
@@ -96,11 +94,12 @@ class Grid {
 	}
 
 	byte[][][] regionRows() {
-	    byte[][][] arr = new byte[9][9][2];
+	    byte[][][] arr = new byte[9][9][4];
 	    for( int i = 0; i < 9; i++) {
+		int[]innerCol = new int[9];		
 		for( int j = 0; j < 27; j++) {
 		    if( binaryRegionRows[i][j] > 0)
-			arr[i][j%3 + j/9*3][1] = (byte)(j/3);
+			arr[i][j%3 + j/9*3][1 + innerCol[j/9*9/3 + j%3]++] = (byte)(j/3);
 		    arr[i][j%3 + j/9*3][0] += binaryRegionRows[i][j];
 		}
 	    }
@@ -142,7 +141,7 @@ class Grid {
 	void printRegions() {
 	    for( int i = 0; i < 9; i++) {
 		for( int j = 0; j < 9; j++) {
-		    for( int k = 0; k < 2; k++) {
+		    for( int k = 0; k < regionRows[i][j].length; k++) {
 			System.out.print( regionRows[i][j][k] + " ");
 		    }
 		    System.out.print("\t");
@@ -213,7 +212,7 @@ class Grid {
 				    cells[k].columnID() == columnID    &&
 				    cells[k].contains( pointingNumber) ) {
 				    
-				    cells[k].eliminateCandidate( pointingNumber);
+				    //cells[k].eliminateCandidate( pointingNumber);
 				}
 			    }
 			}
