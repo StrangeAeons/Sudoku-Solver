@@ -14,26 +14,38 @@ public class Main {
 	}
 
 	Grid playGrid = new Grid();
-	
+
+	int givenSolutions = 0;
 	for( int i = 0; i < arr.length; i++) {
 	    int solution = arr[i];
 	    if( solution > 0) {
 		playGrid.getCell(i).setSolution( solution, playGrid);
+		givenSolutions++;
 	    }
 	}
 	int changes = 0;
 	do {
-	    changes = Cell.getNumberSolved();
+	    changes = Cell.getNumberEliminatedCandidates();
 	    playGrid.checkRegionsRowsColumns();	
-	    System.out.println("BC CALLED");
+	    //System.out.println("BC CALLED");
 	    Grid.BinaryCandidates BC = playGrid.new BinaryCandidates();
-	    PointingNumbers[] P = {BC.new PointingRows(), BC.new PointingColumns()};
+	    BC.new PointingRows(); BC.new PointingColumns();
+	    playGrid.fillRegionsRowsColumns();	    
+	    BC.new BoxedColumns(); BC.new BoxedRows();
+	    playGrid.fillRegionsRowsColumns();
+
+	    //BC.printBinRegions();
 	    BC.printRegions();
-	    Printer.printCandidates( playGrid);
-	    Printer.printGrid( playGrid);
+
+	    System.out.println("NUMBER CANDIDATES ELIMINATED : " + Cell.getNumberEliminatedCandidates() );	
+	    System.out.println("NUMBER SOLVED : " + Cell.getNumberSolved() );	    
 	}
-	while( changes != Cell.getNumberSolved());
-	System.out.println("NUMBER SOLVED : " + Cell.getNumberSolved() );
+	while( changes != Cell.getNumberEliminatedCandidates() );
+
+	Printer.printCandidates( playGrid);
+	Printer.printGrid( playGrid);
+	System.out.println(givenSolutions + " solutions given.  " +
+			   (Cell.getNumberSolved() - givenSolutions) + " SOLVED");
 	PauseTest.main( new String[0]);
     }
 }

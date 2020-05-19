@@ -8,9 +8,9 @@ class SearchRegion implements SearchArray {
 	for( int i = 0; i < cells.length; i++)
 	    if( cells[i].regionID() == regionID)
 		if( cells[i].contains( searchNumber) ) {
-		    System.out.println("Cell " + i
+		    /* System.out.println("Cell " + i
 				       + " contains the single " + searchNumber
-				       + " in region " + regionID);
+				       + " in region " + regionID);*/
 		    return cells[i];			
 		}
 	return new Cell();
@@ -22,9 +22,9 @@ class SearchRow implements SearchArray {
 	int rowStart = rowID*9;
 	for( int i = rowStart; i < rowStart + 9; i++) {
 	    if( cells[i].contains( searchNumber) ) {
-		System.out.println("Cell " + i
+		/*System.out.println("Cell " + i
 				   + " contains the single " + searchNumber
-				   + " in row " + rowID);
+				   + " in row " + rowID);*/
 		return cells[i];
 	    }
 	}
@@ -38,9 +38,9 @@ class SearchColumn implements SearchArray {
 	int colStart = colID;
 	for( int i = colStart; i < colStart + 73; i += 9) {
 	    if( cells[i].contains( searchNumber) ) {
-		System.out.println("Cell " + i
+		/*System.out.println("Cell " + i
 				   + " contains the single " + searchNumber
-				   + " in column " + colID);
+				   + " in column " + colID);*/
 		return cells[i];
 	    }
 	}

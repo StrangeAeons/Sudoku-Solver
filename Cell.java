@@ -2,13 +2,19 @@ class Cell {
 
     public static final char unsolved = '_';
 
-    // numberSolved is used to determine if any changes took place in
-    // the most recent iteration of the solve algorithms.
-    private static int numberSolved;
+    private static int
+	numberSolved,
+	numberEliminatedCandidates,
+	numberOfCells;
 
-    private static int numberOfCells;
-    private int solution;
-    private int cellNumber;
+    private int
+	solution,
+	cellNumber,
+	regionID,
+	columnID,
+	rowID,
+	sectorRowID,
+	sectorColID;	
 
     //  The ints in this array represent potential solutions for the cell.
     //  Once we have narrowed the potential solutions down to one, the cell is solved.
@@ -16,6 +22,11 @@ class Cell {
     
     Cell(){
 	cellNumber = numberOfCells++;
+	regionID    = cellNumber / 27 * 3 + cellNumber % 9 / 3;
+	columnID    = cellNumber % 9;
+	rowID       = cellNumber / 9;
+	sectorRowID = regionID / 3;
+	sectorColID = regionID % 3;	
     }
     
     boolean contains( int i){
@@ -26,43 +37,15 @@ class Cell {
     
     void eliminateCandidate( int i) {
 	arr[i - 1] = 0;
-	if( this.numberOfCandidates() == 1) {
-	    /* System.out.println("'" + this.checkSolved() + "'" + " in cell "  // FOR DEBUGGING
-	       + this.cellNumber + " is a naked single.");*/	
-	}
+	numberEliminatedCandidates++;
+	/*if( this.numberOfCandidates() == 1) {
+	    System.out.println("'" + this.checkSolved() + "'" + " in cell "  // FOR DEBUGGING
+	       + this.cellNumber + " is a naked single.");
+	       }*/
     }
 	
     int getCellNumber() {
 	return cellNumber;
-    }
-
-    int columnID() {
-	return cellNumber % 9;
-    }
-
-    int numberOfCandidates() {
-	int count = 0;
-	for( int i = 0; i < 9; i++) {
-	    if( arr[i] > 0)
-		count++;	    
-	}
-	return count;
-    }
-    
-    int regionID() {
-	return cellNumber / 27 * 3 + cellNumber % 9 / 3;
-    }
-
-    int rowID() {
-	return cellNumber / 9;
-    }
-    
-    int getSolution() {
-	return solution;
-    }
-
-    static int getNumberSolved() {
-	return numberSolved;
     }
 
     int checkSolved() {
@@ -81,21 +64,63 @@ class Cell {
 	if( count == 1)
 	    return tempSolution;
 	return 0;
+	}
+    
+    int columnID() {
+	return columnID;
+    }
+
+    int numberOfCandidates() {
+	int count = 0;
+	for( int i = 0; i < 9; i++) {
+	    if( arr[i] > 0)
+		count++;	    
+	}
+	return count;
+    }
+    
+    int regionID() {
+	return regionID;
+    }
+
+    int rowID() {
+	return rowID;
+    }
+
+    int sectorRowID() {
+	return sectorRowID;
+    }
+
+    int sectorColID() {
+	return sectorColID;
+    }
+    
+    int getSolution() {
+	return solution;
+    }
+
+    static int getNumberSolved() {
+	return numberSolved;
+    }
+
+    static int getNumberEliminatedCandidates() {
+	return numberEliminatedCandidates;
     }
 
     int[] getCandidates() {
 	return arr;
-    }
+	}
 
     void setSolution( int solution, Grid grid) {
 	if( solution == 0 || this.solution != 0)
 	    return;
 
 	this.solution = solution;
-	
+	numberEliminatedCandidates += this.numberOfCandidates() - 1;
 	for( int i = 0; i < 9; i++) {
 	    arr[i] = 0;
 	}
+	
 	grid.fillRegionsRowsColumns();
 
 	

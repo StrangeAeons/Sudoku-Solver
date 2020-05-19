@@ -16,6 +16,10 @@ class Grid {
     Cell[] getCells() {
 	return cells;
     }
+
+    public Grid getGrid() {
+	return Grid.this;
+    }
     
     void checkRegionsRowsColumns() {
 	SearchArray[] search = { new SearchRegion(), new SearchRow(), new SearchColumn() };
@@ -107,11 +111,12 @@ class Grid {
 	}
 
 	byte[][][] regionColumns() {
-	    byte[][][] arr = new byte[9][9][2];
+	    byte[][][] arr = new byte[9][9][4];
 	    for( int i = 0; i < 9; i++) {
+		int[]innerCol = new int[9];				
 		for( int j = 0; j < 27; j++) {
 		    if( binaryRegionColumns[i][j] > 0)
-			arr[i][j/9*3 + j%9/3][1] = (byte)(j%9);
+			arr[i][j/9*3 + j%9/3][1 + innerCol[j/3]++] = (byte)(j%9);
 		    arr[i][j/9*3 + j%9/3][0] += binaryRegionColumns[i][j];		    
 		}
 	    }
@@ -151,7 +156,7 @@ class Grid {
 	    System.out.print("\n\n");
 	    for( int i = 0; i < 9; i++) {
 		for( int j = 0; j < 9; j++) {
-		    for( int k = 0; k < 2; k++) {
+		    for( int k = 0; k < regionColumns[i][j].length; k++) {
 			System.out.print( regionColumns[i][j][k] + " ");
 		    }
 		    System.out.print("\t");
@@ -160,7 +165,7 @@ class Grid {
 	    }	    
 	}
 	
-	class PointingRows implements PointingNumbers{
+	class PointingRows implements PointingNumbers {
 
 	    public PointingRows() {
 		this.pointingNumbers();
@@ -194,7 +199,7 @@ class Grid {
 	    }
 	}
 	
-	class PointingColumns implements PointingNumbers{
+	class PointingColumns implements PointingNumbers {
 
 	    public PointingColumns() {
 		this.pointingNumbers();
@@ -212,14 +217,106 @@ class Grid {
 				    cells[k].columnID() == columnID    &&
 				    cells[k].contains( pointingNumber) ) {
 				    
-				    //cells[k].eliminateCandidate( pointingNumber);
+				    cells[k].eliminateCandidate( pointingNumber);
 				}
 			    }
 			}
 		    }
 		}
 	    }		
-	}	
+	}
+
+	class BoxedRows implements PointingNumbers {
+
+	    BoxedRows() {
+		this.pointingNumbers();
+		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAaaaaaHHHHHHHHHHHHHHHHHHHHHHhhhhhhh!!!");
+	    }
+	    
+	    public void pointingNumbers() {
+		for( int i = 0; i < 9; i++) {
+		    for( int j = 0; j < 7; j += 3) {
+			if( regionRows[i][j][0] == 2) {
+			    int kCount = 0;
+			    for( int k = j + 1; k < 3; k++) { 
+				kCount++;
+				int[] rowIDs = new int[2];
+				int index = 0;				
+				for( int a = 0; a < 3; a++) {
+				    // this array holds column numbers to delete from
+				    if( regionRows[i][j][a] != regionRows[i][k][a])
+					break;
+				    if( a > 0){
+					rowIDs[index++] = regionRows[i][j][a];
+				    }
+				    if( a == 2) {
+					//  find boxed cells and delete appropriate candidates
+					int boxedNumber = i + 1,
+					    regionID = kCount == 1  ?  j + 2  :  j + 1;
+					
+					for( int r : rowIDs) {
+					    for( int r2 = r*9; r2 < (r*9 + 9); r2++) {
+						if( cells[r2].regionID() == regionID &&
+						    cells[r2].contains( boxedNumber) ) {
+						    //Printer.printCandidates( Grid.this );						    
+						    cells[r2].eliminateCandidate( boxedNumber);
+						}
+					    }
+					}
+				    }
+				}
+			    }
+			}
+		    }
+		}
+	    }	    
+	}
+	
+	
+	class BoxedColumns implements PointingNumbers {
+	    
+	    BoxedColumns() {
+		this.pointingNumbers();
+	    }
+	    
+	    public void pointingNumbers() {
+		for( int i = 0; i < 9; i++) {
+		    for( int j = 0; j < 3; j++) {
+			if( regionColumns[i][j][0] == 2) {
+			    int kCount = 0;
+			    for( int k = j + 3; k < 9; k += 3) { 
+				kCount++;
+				int[] columnIDs = new int[2];
+				int index = 0;				
+				for( int a = 0; a < 3; a++) {
+				    // this array holds column numbers to delete from
+				    if( regionColumns[i][j][a] != regionColumns[i][k][a])
+					break;
+				    if( a > 0){
+					columnIDs[index++] = regionColumns[i][j][a];
+				    }
+				    if( a == 2) {
+					//  find boxed cells and delete appropriate candidates
+					int boxedNumber = i + 1,
+					    regionID = kCount == 1  ?  j + 6  :  j + 3;
+					
+					for( int c : columnIDs) {
+					    for( int c2 = c; c2 < 81; c2 += 9) {
+						if( cells[c2].regionID() == regionID &&
+						    cells[c2].contains( boxedNumber) ) {
+						    //Printer.printCandidates( Grid.this );						    
+						    cells[c2].eliminateCandidate( boxedNumber);
+						}
+					    }
+					}
+				    }
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	}
     }
 }
 
